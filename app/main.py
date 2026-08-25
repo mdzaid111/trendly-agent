@@ -21,6 +21,15 @@ class ChatIn(BaseModel):
     session_id: str
     message: str=Field(min_length=1,max_length=4000)
 
+@app.get("/")
+def root():
+    return {
+        "name": "Trendly Agentic Support Assistant",
+        "status": "running",
+        "docs": "/docs",
+        "health": "/health"
+    }
+
 @app.get("/health")
 def health():
     return {"status":"ok","llm_configured":bool(client),"model":settings.groq_model}
@@ -42,3 +51,6 @@ def chat(body:ChatIn):
 def history(session_id:str):
     if not state.get_session(session_id): raise HTTPException(404,"Unknown session")
     return {"messages":state.history(session_id)}
+
+
+
